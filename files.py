@@ -32,3 +32,53 @@ for country in countries:
     print(country)
 
 file.close()
+
+
+import pathlib
+
+# new_file_path = pathlib.Path("cities.txt")
+# new_file = open(new_file_path, mode="w")
+# new_file = new_file_path.open()
+
+# new_file.write("Hello")
+# new_file.write("\n")
+# new_file.write("World")
+
+# new_file.write("Hello\nWorld")
+
+# new_file.writelines(["Hello", "\n", "World"])
+
+# print("Hello", file=new_file)
+# print("World", file=new_file)
+
+file_path = pathlib.Path("cities.txt")
+
+def file_to_dict():
+    new_file = open(file_path)
+    countries = {}
+    for line in new_file:
+        # "Israel: 3\n"
+        line = line.split()
+        # ["Israel:", "3\n"]
+        country = line[0].strip(":")
+        number = int(line[1].strip())
+        countries[country] = number
+    return countries
+
+def dict_max(some_dict):
+    max_points = max(some_dict.values())
+    for key, value in some_dict.items():
+        if value == max_points:
+            return key
+
+def dict_to_file(some_dict, some_file):
+    for key, value in some_dict.items():
+        some_file.write(key + ": " + str(value) + "\n")
+
+
+my_dict = {
+    "Israel": 3,
+    "USA": 2,
+    "Germany": 5
+}
+
