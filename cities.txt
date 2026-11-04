@@ -1,0 +1,3 @@
+Israel: 768
+USA: 512
+Germany: 256
