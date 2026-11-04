@@ -2,14 +2,13 @@ import pathlib
 
 def load_data(path: pathlib.Path | str) -> dict:
     """Load data from a file to a dict"""
-    file = open(path)
-    data = {}  # dict()
-    for line in file:
-        line = line.strip().split(": ")
-        key = line[0]
-        value = int(line[1])
-        data[key] = value
-    file.close()
+    with open(path) as file:
+        data = {}  # dict()
+        for line in file:
+            line = line.strip().split(": ")
+            key = line[0]
+            value = int(line[1])
+            data[key] = value
     return data
 
 def multiply_data(data: dict[str, int]):
@@ -23,11 +22,10 @@ def multiply_data(data: dict[str, int]):
 
 def save_data(data: dict, path: pathlib.Path | str):
     # {'Israel': 6, 'USA': 4, 'Germany': 2}
-    file = open(path, mode="w")
-    for key, value in data.items():
-        line = key + ": " + str(value) + "\n"
-        file.write(line)
-    file.close()
+    with open(path, mode="w") as file:
+        for key, value in data.items():
+            line = key + ": " + str(value) + "\n"
+            file.write(line)
 
 
 path = pathlib.Path("cities.txt")
