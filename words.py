@@ -67,8 +67,8 @@ def socket_input():
         add_word_to_file(data)
 
 
-t1 = Thread(target=terminal_input)
-t2 = Thread(target=socket_input)
+t1 = Thread(target=terminal_input, daemon=True)
+t2 = Thread(target=socket_input, daemon=True)
 t1.start()
 t2.start()
 app.run("0.0.0.0", 9001)
