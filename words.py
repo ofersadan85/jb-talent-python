@@ -15,10 +15,12 @@ def add_word_to_file(word: str):
 @app.route("/words")
 def get_wordlist():
     with FILE_LOCK:
-        if not WORDS_FILE.is_file():
+        try:
+            with open(WORDS_FILE) as f:
+                return [line.strip() for line in f]
+        except OSError as e:
+            print(f"Warning: {e}")
             return []
-        with open(WORDS_FILE) as f:
-            return [line.strip() for line in f]
             # lines = []
             # for line in f:
             #     lines.append(line.strip())
@@ -38,9 +40,13 @@ def add_word():
     
 def terminal_input():
     while True:
-        data = input()
-        print(f"TERMINAL => {data}")
-        add_word_to_file(data)
+        try:
+            data = input()
+            print(f"TERMINAL => {data}")
+            add_word_to_file(data)
+        except EOFError:
+            print("Terminal input finished!")
+            break
 
 def socket_input():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -48,9 +54,14 @@ def socket_input():
     server_socket.listen()
     while True:
         client_socket, client_address = server_socket.accept()
+        client_socket.settimeout(5.0)
         with client_socket:
-            client_socket.sendall(b"Welcome to the word server\n")
-            data = client_socket.recv(1024)
+            try:
+                client_socket.sendall(b"Welcome to the word server\n")
+                data = client_socket.recv(1024)
+            except TimeoutError:
+                print(f"Client {client_address} timed out")
+                continue
             data = data.decode()
         print(f"SOCKET {client_address} => {data}")
         add_word_to_file(data)
